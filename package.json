@@ -1,30 +1,67 @@
 {
   "name": "antd-data-table",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "A feature-rich data table component for Ant Design, with batch selection, column configuration, and drag-to-sort support",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "npx tsc -p tsconfig.json && npx vite build",
+    "dev": "npx vite build --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@ant-design/icons": ">=5.0.0",
+    "ahooks": ">=3.0.0",
+    "antd": ">=6.0.0",
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0"
   },
   "dependencies": {
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "eslint": "^10.3.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.6.0",
+    "antd": "^6.3.4",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12"
-  }
+  },
+  "keywords": [
+    "react",
+    "antd",
+    "data-table",
+    "table",
+    "sortable",
+    "typescript"
+  ],
+  "author": "Czw96",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Czw96/antd-data-table.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Czw96/antd-data-table/issues"
+  },
+  "homepage": "https://github.com/Czw96/antd-data-table#readme"
 }
