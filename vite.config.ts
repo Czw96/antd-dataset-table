@@ -13,7 +13,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    emptyOutDir: false,
+    emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "AntdDataTable",
@@ -22,15 +22,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: [
-        "react",
-        "react-dom",
         "antd",
         "@ant-design/icons",
         "ahooks",
-        "@dnd-kit/core",
-        "@dnd-kit/modifiers",
-        "@dnd-kit/sortable",
-        "@dnd-kit/utilities",
+        "antd-draggable-table",
       ],
       output: {
         globals: {

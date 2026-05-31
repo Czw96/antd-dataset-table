@@ -5,6 +5,19 @@ node_modules/
 src/
 tsconfig.json
 vite.config.ts
+vite.config.preview.ts
+
+# Preview/demo files
+preview/
+demo-dist/
+
+# Test files (including any accidentally built test declaration files in dist/)
+src/__tests__/
+*.test.tsx
+*.test.ts
+*.spec.tsx
+*.spec.ts
+dist/__tests__/
 
 # Git files
 .git/
