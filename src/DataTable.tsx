@@ -1,4 +1,5 @@
-import { Button, Col, Pagination, Popover, Row, Space, Table } from "antd";
+import { CheckSquareOutlined, StopOutlined } from "@ant-design/icons";
+import { Button, Col, Pagination, Row, Space, Table } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
 import type { ColumnType, TableProps } from "antd/lib/table";
 import React, { useMemo, useState } from "react";
@@ -9,7 +10,7 @@ interface ColumnItem<RecordType> extends Omit<ColumnType<RecordType>, "render"> 
 
 interface SelectionConfig<RecordType> {
   fixed?: boolean;
-  displayColumnKeys: string[];
+  displayColumnKeys: keyof RecordType[];
   batchActionRender?: (records: RecordType[]) => React.ReactNode;
   onChange: (records: RecordType[]) => void;
 }
@@ -29,10 +30,12 @@ interface DataTableProps<RecordType> extends Omit<
   selectionConfig?: SelectionConfig<RecordType>;
   rowActionRender?: (record: RecordType) => React.ReactNode;
   paginationConfig?: PaginationConfig;
+  extraActionRender?: () => React.ReactNode;
 }
 
 const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(props: DataTableProps<RecordType>) => {
-  const { columns, dataSource, selectionConfig, paginationConfig, rowActionRender, batchActionRender, ...restProps } = props;
+  const { columns, dataSource, selectionConfig, paginationConfig, extraActionRender, ...restProps } = props;
+  const [openSelectMode, setOpenSelectMode] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRowItems, setSelectedRowItems] = useState<RecordType[]>([]);
 
@@ -70,24 +73,23 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
 
       <Col>
         <Space.Compact>
-          <Popover
-            title="已选择项"
-            content={
-              <div style={{ width: "400px", minHeight: "160px" }}>
-                <BatchSelectTable
-                  rowKey="id"
-                  dataColumns={dataColumns}
-                  dataSource={selectedItems}
-                  onChange={(items) => dispatch(setSelectedItems(items))}
-                />
-              </div>
-            }
-            trigger="click"
-          >
-            <Button type="default" style={{ width: "160px" }}>
-              已选择 {selectedRowItems.length} 项
-            </Button>
-          </Popover>
+          {selectionConfig &&
+            !selectionConfig.fixed &&
+            (openSelectMode ? (
+              <>
+                <Button type="default" icon={<StopOutlined />} onClick={() => setOpenSelectMode(false)}>
+                  关闭多选
+                </Button>
+                {selectionConfig.batchActionRender?.(selectedRowItems)}
+              </>
+            ) : (
+              <>
+                <Button type="default" icon={<CheckSquareOutlined />} onClick={() => setOpenSelectMode(true)}>
+                  开启多选
+                </Button>
+                {extraActionRender?.()}
+              </>
+            ))}
         </Space.Compact>
       </Col>
 
