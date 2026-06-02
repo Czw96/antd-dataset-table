@@ -1,8 +1,9 @@
 import { CheckSquareOutlined, StopOutlined } from "@ant-design/icons";
 import { Button, Col, Pagination, Row, Space, Table } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
-import type { ColumnType, TableProps } from "antd/lib/table";
+import type { ColumnsType, ColumnType, TableProps } from "antd/lib/table";
 import React, { useMemo, useState } from "react";
+import SelectedPopover from "./SelectedPopover";
 
 interface ColumnItem<RecordType> extends Omit<ColumnType<RecordType>, "render"> {
   render?: ({ record, index }: { record: RecordType; index: number }) => React.ReactNode;
@@ -34,13 +35,53 @@ interface DataTableProps<RecordType> extends Omit<
 }
 
 const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(props: DataTableProps<RecordType>) => {
-  const { columns, dataSource, selectionConfig, paginationConfig, extraActionRender, ...restProps } = props;
+  const {
+    columns,
+    dataSource,
+    selectionConfig,
+    expandable,
+    rowActionRender,
+    paginationConfig,
+    extraActionRender,
+    ...restProps
+  } = props;
   const [openSelectMode, setOpenSelectMode] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRowItems, setSelectedRowItems] = useState<RecordType[]>([]);
 
+  // Table Columns
+  const tableColumns = useMemo<ColumnsType<RecordType>>(() => {
+    const _columns: ColumnsType<RecordType> = [];
+    _columns.push({
+      title: "序号",
+      dataIndex: "index",
+      width: 60,
+      fixed: "left",
+      render: (_, __, index) => index + 1,
+    });
+
+    const dataColumns: ColumnsType<RecordType> = columns.map((item) => {
+      if (!item.render) return item;
+      return { ...item, render: (_: unknown, record: RecordType, index: number) => item.render!({ record, index }) };
+    });
+    _columns.push(...dataColumns);
+
+    if (rowActionRender) {
+      _columns.push({
+        key: "action",
+        title: "操作",
+        dataIndex: "action",
+        fixed: "right",
+        render: (_, record) => rowActionRender?.(record),
+      });
+    }
+
+    return _columns;
+  }, [columns, rowActionRender]);
+
+  // Row Selection
   const rowSelection: TableRowSelection<RecordType> | undefined = useMemo(() => {
-    if (selectionConfig) {
+    if (selectionConfig?.fixed || openSelectMode) {
       return {
         selectedRowKeys: selectedRowKeys,
         onChange: (selectedRowKeys, selectedRowItems) => {
@@ -50,7 +91,7 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
       };
     }
     return undefined;
-  }, [selectedRowKeys, selectionConfig]);
+  }, [openSelectMode, selectedRowKeys, selectionConfig?.fixed]);
 
   return (
     <Row gutter={[8, 12]}>
@@ -58,13 +99,13 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
         <Table<RecordType>
           {...restProps}
           sticky={true}
-          columns={columns}
+          columns={tableColumns}
           dataSource={dataSource}
           showSorterTooltip={false}
           rowSelection={rowSelection}
           pagination={false}
           scroll={{ ...restProps.scroll, x: "max-content" }}
-          // expandable={expandable}
+          expandable={expandable}
           // onChange={(pagination, filters, sorter, extra) =>
           //   onSearch?.(generateTableQueryParams(pagination, filters, sorter, extra))
           // }
@@ -72,14 +113,22 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
       </Col>
 
       <Col>
-        <Space.Compact>
+        <Space>
           {selectionConfig &&
             !selectionConfig.fixed &&
             (openSelectMode ? (
               <>
-                <Button type="default" icon={<StopOutlined />} onClick={() => setOpenSelectMode(false)}>
-                  关闭多选
-                </Button>
+                <Space.Compact>
+                  <Button type="default" icon={<StopOutlined />} onClick={() => setOpenSelectMode(false)}>
+                    关闭多选
+                  </Button>
+                  <SelectedPopover
+                    rowKey="id"
+                    dataColumns={columns}
+                    dataSource={selectedRowItems}
+                    onChange={setSelectedRowItems}
+                  />
+                </Space.Compact>
                 {selectionConfig.batchActionRender?.(selectedRowItems)}
               </>
             ) : (
@@ -90,7 +139,7 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
                 {extraActionRender?.()}
               </>
             ))}
-        </Space.Compact>
+        </Space>
       </Col>
 
       <Col style={{ marginLeft: "auto" }}>
