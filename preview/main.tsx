@@ -128,6 +128,7 @@ const App: React.FC = () => {
           style={{ height: "100%" }}
         >
           <DataTable<DemoItem>
+            name="demo-table"
             rowKey="id"
             columns={baseColumns}
             dataSource={hasData ? dataSource : []}

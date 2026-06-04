@@ -41,6 +41,7 @@ interface DataTableProps<RecordType> extends Omit<
 
 const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(props: DataTableProps<RecordType>) => {
   const {
+    name,
     columns,
     dataSource,
     selectionConfig,
@@ -50,12 +51,39 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
     extraActionRender,
     ...restProps
   } = props;
+  const storageKey = name ? `table-column-${name}` : null;
   const [openSelectMode, setOpenSelectMode] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRowItems, setSelectedRowItems] = useState<RecordType[]>([]);
-  const [columnConfigs, setColumnConfigs] = useState<ColumnConfig[]>(() =>
-    columns.map((column) => ({ key: String(column.key), title: String(column.title ?? ""), visible: !column.hidden }))
-  );
+  const [columnConfigs, setColumnConfigs] = useState<ColumnConfig[]>(() => {
+    // 生成默认配置
+    const defaultConfigs = columns.map((column) => ({
+      key: String(column.key),
+      title: String(column.title ?? ""),
+      visible: !column.hidden,
+    }));
+
+    // 如果没有设置存储键，直接返回默认配置
+    if (!storageKey) return defaultConfigs;
+
+    try {
+      // 尝试从 localStorage 读取之前保存的配置
+      const stored = localStorage.getItem(storageKey);
+      if (!stored) return defaultConfigs;
+
+      // 解析存储的配置
+      const parsed: ColumnConfig[] = JSON.parse(stored);
+
+      // 过滤出有效的配置（只保留当前还存在的列）
+      const keySet = new Set(columns.map((c) => String(c.key)));
+      const valid = parsed.filter((c) => keySet.has(c.key));
+
+      // 如果有有效的配置就使用，否则回退到默认配置
+      return valid.length > 0 ? valid : defaultConfigs;
+    } catch {
+      return defaultConfigs;
+    }
+  });
 
   // 列设置状态: 根据 columns prop 初始化, columns 变化时同步新增/移除列
   useEffect(() => {
@@ -68,6 +96,13 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
       });
     });
   }, [columns]);
+
+  // 列配置变更时同步到 LocalStorage
+  useEffect(() => {
+    if (storageKey) {
+      localStorage.setItem(storageKey, JSON.stringify(columnConfigs));
+    }
+  }, [columnConfigs, storageKey]);
 
   // 重置列设置
   const handleResetColumnConfig = () => {
