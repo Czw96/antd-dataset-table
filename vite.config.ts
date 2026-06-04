@@ -13,7 +13,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    emptyOutDir: true,
+    emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "AntdDataTable",
@@ -21,12 +21,7 @@ export default defineConfig({
       fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
     },
     rollupOptions: {
-      external: [
-        "antd",
-        "@ant-design/icons",
-        "ahooks",
-        "antd-draggable-table",
-      ],
+      external: ["antd", "@ant-design/icons", "ahooks", "antd-draggable-table"],
       output: {
         globals: {
           react: "React",

@@ -41,7 +41,7 @@ const App: React.FC = () => {
         age: 20 + (i % 30),
         address: `地址 ${i + 1}`,
       })),
-    [],
+    []
   );
 
   return (
@@ -80,33 +80,52 @@ const App: React.FC = () => {
         />
         {showSelection && (
           <div style={{ paddingLeft: 16, marginTop: 4, marginBottom: 8 }}>
-            <ConfigItem
-              label="fixed"
-              checked={selectionFixed}
-              onChange={setSelectionFixed}
-              compact
-            />
+            <ConfigItem label="始终多选" checked={selectionFixed} onChange={setSelectionFixed} compact />
           </div>
         )}
 
         <Divider style={{ margin: "12px 0" }} />
 
-        <ConfigItem label="expandable" desc="行展开详情" checked={showExpandable} onChange={setShowExpandable} color={showExpandable ? "#1677ff" : undefined} />
-        <ConfigItem label="rowActionRender" desc="操作列" checked={showRowAction} onChange={setShowRowAction} color={showRowAction ? "#1677ff" : undefined} />
-        <ConfigItem label="paginationConfig" desc="底部分页" checked={showPagination} onChange={setShowPagination} color={showPagination ? "#1677ff" : undefined} />
-        <ConfigItem label="extraActionRender" desc="自定义按钮" checked={showExtraAction} onChange={setShowExtraAction} color={showExtraAction ? "#1677ff" : undefined} />
+        <ConfigItem
+          label="expandable"
+          desc="行展开详情"
+          checked={showExpandable}
+          onChange={setShowExpandable}
+          color={showExpandable ? "#1677ff" : undefined}
+        />
+        <ConfigItem
+          label="rowActionRender"
+          desc="操作列"
+          checked={showRowAction}
+          onChange={setShowRowAction}
+          color={showRowAction ? "#1677ff" : undefined}
+        />
+        <ConfigItem
+          label="paginationConfig"
+          desc="底部分页"
+          checked={showPagination}
+          onChange={setShowPagination}
+          color={showPagination ? "#1677ff" : undefined}
+        />
+        <ConfigItem
+          label="extraActionRender"
+          desc="自定义按钮"
+          checked={showExtraAction}
+          onChange={setShowExtraAction}
+          color={showExtraAction ? "#1677ff" : undefined}
+        />
       </div>
 
       {/* ─── 右侧预览区 ─── */}
-      <div style={{ flex: 1, padding: 24, overflow: "auto" }}>
+      <div style={{ flex: 1, padding: 8, height: "100vh", overflow: "auto" }}>
         <Card
-          styles={{ body: { padding: 0 } }}
           title={
             <Space>
               <span>预览</span>
               <Tag color="blue">DemoItem</Tag>
             </Space>
           }
+          style={{ height: "100%" }}
         >
           <DataTable<DemoItem>
             rowKey="id"
@@ -130,7 +149,7 @@ const App: React.FC = () => {
                     displayColumnKeys: ["id", "name", "age"],
                     onChange: (records) => message.info(`已选 ${records.length} 项`),
                     batchActionRender: (records) => (
-                      <Button type="primary" size="small" onClick={() => message.info(`批量操作 ${records.length} 条`)}>
+                      <Button type="primary" onClick={() => message.info(`批量操作 ${records.length} 条`)}>
                         批量操作
                       </Button>
                     ),
@@ -152,14 +171,15 @@ const App: React.FC = () => {
                     page,
                     pageSize,
                     totalCount: hasData ? total : 0,
-                    onChange: (p, ps) => { setPage(p); setPageSize(ps); },
+                    onChange: (p, ps) => {
+                      setPage(p);
+                      setPageSize(ps);
+                    },
                   }
                 : undefined
             }
             extraActionRender={
-              showExtraAction
-                ? () => <Button size="small" onClick={() => message.info("自定义操作")}>自定义</Button>
-                : undefined
+              showExtraAction ? () => <Button onClick={() => message.info("自定义操作")}>自定义</Button> : undefined
             }
           />
         </Card>
@@ -189,7 +209,9 @@ const ConfigItem: React.FC<{
       <code style={{ fontSize: 13, color: "#1a1a1a" }}>{label}</code>
       {desc && (
         <span style={{ fontSize: 12, marginLeft: 8 }}>
-          <Tag color={color} style={{ margin: 0 }}>{desc}</Tag>
+          <Tag color={color} style={{ margin: 0 }}>
+            {desc}
+          </Tag>
         </span>
       )}
     </div>

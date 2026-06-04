@@ -2,16 +2,20 @@ import { CheckSquareOutlined, StopOutlined } from "@ant-design/icons";
 import { Button, Col, Pagination, Row, Space, Table } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
 import type { ColumnsType, ColumnType, TableProps } from "antd/lib/table";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import ColumnSetting, { ColumnConfig } from "./ColumnSetting";
 import SelectedPopover from "./SelectedPopover";
 
-interface ColumnItem<RecordType> extends Omit<ColumnType<RecordType>, "render"> {
+interface ColumnItem<RecordType> extends Omit<ColumnType<RecordType>, "key" | "title" | "dataIndex" | "render"> {
+  key: string;
+  title?: string;
+  dataIndex?: string | string[];
   render?: ({ record, index }: { record: RecordType; index: number }) => React.ReactNode;
 }
 
 interface SelectionConfig<RecordType> {
   fixed?: boolean;
-  displayColumnKeys: keyof RecordType[];
+  displayColumnKeys: string[];
   batchActionRender?: (records: RecordType[]) => React.ReactNode;
   onChange: (records: RecordType[]) => void;
 }
@@ -27,6 +31,7 @@ interface DataTableProps<RecordType> extends Omit<
   TableProps<RecordType>,
   "columns" | "rowSelection" | "pagination" | "sticky" | "showSorterTooltip"
 > {
+  name?: string;
   columns: ColumnItem<RecordType>[];
   selectionConfig?: SelectionConfig<RecordType>;
   rowActionRender?: (record: RecordType) => React.ReactNode;
@@ -48,38 +53,79 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
   const [openSelectMode, setOpenSelectMode] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRowItems, setSelectedRowItems] = useState<RecordType[]>([]);
+  const [columnConfigs, setColumnConfigs] = useState<ColumnConfig[]>(() =>
+    columns.map((column) => ({ key: String(column.key), title: String(column.title ?? ""), visible: !column.hidden }))
+  );
 
-  // Table Columns
+  // 列设置状态: 根据 columns prop 初始化, columns 变化时同步新增/移除列
+  useEffect(() => {
+    setColumnConfigs((previous) => {
+      const existingMap = new Map(previous.map((columnConfig) => [columnConfig.key, columnConfig]));
+      return columns.map((column) => {
+        const key = String(column.key);
+        const existing = existingMap.get(key);
+        return existing ?? { key, title: String(column.title ?? ""), visible: !column.hidden };
+      });
+    });
+  }, [columns]);
+
+  // 重置列设置
+  const handleResetColumnConfig = () => {
+    setColumnConfigs(
+      columns.map((column) => ({ key: String(column.key), title: String(column.title ?? ""), visible: !column.hidden }))
+    );
+  };
+
+  // 表格列设置
   const tableColumns = useMemo<ColumnsType<RecordType>>(() => {
-    const _columns: ColumnsType<RecordType> = [];
-    _columns.push({
+    // 序号列
+    const indexColumn: ColumnType<RecordType> = {
       title: "序号",
       dataIndex: "index",
       width: 60,
       fixed: "left",
       render: (_, __, index) => index + 1,
+    };
+
+    // 操作列（可选）
+    const actionColumn: ColumnType<RecordType> | null = rowActionRender
+      ? {
+          key: "action",
+          title: "操作",
+          dataIndex: "action",
+          fixed: "right",
+          render: (_, record) => rowActionRender?.(record),
+        }
+      : null;
+
+    // 构建列映射表
+    const keyToColumnMap = new Map(columns.map((column) => [String(column.key), column]));
+
+    // 按配置顺序获取可见列
+    const visibleDataColumns = columnConfigs
+      .filter((columnConfig) => columnConfig.visible)
+      .map((columnConfig) => keyToColumnMap.get(columnConfig.key))
+      .filter(Boolean) as ColumnItem<RecordType>[];
+
+    // 适配 render 函数参数
+    const adaptedDataColumns: ColumnsType<RecordType> = visibleDataColumns.map((column) => {
+      if (!column.render) return column;
+      return {
+        ...column,
+        render: (_, record, index) => column.render?.({ record, index }),
+      };
     });
 
-    const dataColumns: ColumnsType<RecordType> = columns.map((item) => {
-      if (!item.render) return item;
-      return { ...item, render: (_: unknown, record: RecordType, index: number) => item.render!({ record, index }) };
-    });
-    _columns.push(...dataColumns);
-
-    if (rowActionRender) {
-      _columns.push({
-        key: "action",
-        title: "操作",
-        dataIndex: "action",
-        fixed: "right",
-        render: (_, record) => rowActionRender?.(record),
-      });
+    // 组合所有列
+    const allColumns: ColumnsType<RecordType> = [indexColumn, ...adaptedDataColumns];
+    if (actionColumn) {
+      allColumns.push(actionColumn);
     }
 
-    return _columns;
-  }, [columns, rowActionRender]);
+    return allColumns;
+  }, [columns, rowActionRender, columnConfigs]);
 
-  // Row Selection
+  // 行选择配置
   const rowSelection: TableRowSelection<RecordType> | undefined = useMemo(() => {
     if (selectionConfig?.fixed || openSelectMode) {
       return {
@@ -157,14 +203,7 @@ const DraggableTable = <RecordType extends Record<keyof RecordType, unknown>>(pr
         )}
       </Col>
       <Col>
-        {/* <ColumnSettingButton
-          columnConfigs={columnConfigs}
-          onChange={(items) => {
-            setColumnConfigs(items);
-            setLocalColumnConfigs(items);
-          }}
-          onReset={handleResetColumnConfig}
-        /> */}
+        <ColumnSetting columnConfigs={columnConfigs} onChange={setColumnConfigs} onReset={handleResetColumnConfig} />
       </Col>
     </Row>
   );

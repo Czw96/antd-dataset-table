@@ -34,14 +34,12 @@
     "@ant-design/icons": ">=5.0.0",
     "ahooks": ">=3.0.0",
     "antd": ">=6.0.0",
+    "antd-draggable-table": ">=1.0.7",
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
   },
-  "dependencies": {
-    "antd-draggable-table": "file:../antd-draggable-table/antd-draggable-table-1.0.2.tgz"
-  },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.39.4",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -50,6 +48,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "ahooks": "^3.9.7",
     "antd": "^6.3.4",
+    "antd-draggable-table": "^1.0.7",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
