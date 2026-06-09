@@ -12,7 +12,7 @@ interface SelectedPopoverProps<RecordType> {
   onChange?: (items: RecordType[]) => void;
 }
 
-// 已选项弹出面板：显示已选数量按钮，点击展开 Popover，内含可逐行移除的 Table
+// 已选项弹出面板: 显示已选数量按钮, 点击展开 Popover, 内含可逐行移除的 Table
 const SelectedPopover = <RecordType extends Record<string, unknown>>({
   rowKey,
   dataColumns,

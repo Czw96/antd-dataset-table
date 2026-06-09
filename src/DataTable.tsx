@@ -34,6 +34,7 @@ interface PaginationConfig {
   pageSize?: number | string;
   totalCount: number;
   onChange?: (page: number, pageSize: number) => void;
+  pageSizeOptions?: number[];
 }
 
 interface DataTableProps<RecordType> extends Omit<
@@ -51,13 +52,6 @@ interface DataTableProps<RecordType> extends Omit<
 }
 
 const TABLE_STYLES = { footer: { width: "100%", padding: 12, background: "#fff" } };
-
-const SIZE_HEIGHT_MAP: Record<string, { headerHeight: number; footerHeight: number }> = {
-  small: { headerHeight: 39, footerHeight: 56 },
-  middle: { headerHeight: 47, footerHeight: 56 },
-  large: { headerHeight: 55, footerHeight: 56 },
-};
-
 const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: DataTableProps<RecordType>) => {
   const {
     name,
@@ -89,13 +83,8 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
   paginationConfigRef.current = paginationConfig;
   extraActionRenderRef.current = extraActionRender;
 
-  const sizeHeights = SIZE_HEIGHT_MAP[size] || SIZE_HEIGHT_MAP.middle;
-
   // 自动计算表格可用高度
-  const tableHeight = useTableHeight(tableContainerRef, {
-    headerHeight: sizeHeights.headerHeight,
-    footerHeight: sizeHeights.footerHeight,
-  });
+  const tableHeight = useTableHeight(tableContainerRef, { size });
 
   const [columnConfigs, setColumnConfigs] = useState<ColumnConfig[]>(() => {
     const defaultConfigs = columns.map((column) => ({
@@ -105,6 +94,8 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
     }));
 
     if (!storageKey) return defaultConfigs;
+
+    if (typeof window === "undefined") return defaultConfigs;
 
     try {
       const stored = localStorage.getItem(storageKey);
@@ -134,8 +125,12 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
 
   // 持久化列配置到 localStorage
   useEffect(() => {
-    if (storageKey) {
-      localStorage.setItem(storageKey, JSON.stringify(columnConfigs));
+    if (storageKey && typeof window !== "undefined") {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(columnConfigs));
+      } catch {
+        // 静默失败, 避免存储满或禁用时崩溃
+      }
     }
   }, [columnConfigs, storageKey]);
 
@@ -174,8 +169,8 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
       key: "action",
       title: "操作",
       dataIndex: "action",
-      align: "center",
       width: 160,
+      align: "center",
       fixed: "right",
       render: (_value, record) => rowActionRender(record),
     };
@@ -184,13 +179,14 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
   // 数据列(保留 dataIndex 默认渲染,有 render 时才自定义)
   const dataColumns = useMemo<ColumnsType<RecordType>>(() => {
     return columns.map((column) => {
-      if (!column.render) {
-        return { ...column, key: String(column.key), dataIndex: column.dataIndex };
+      if (column.render) {
+        return {
+          width: 160,
+          ...column,
+          render: (_value, record, index) => column.render!({ record, index }),
+        };
       }
-      return {
-        ...column,
-        render: (_value, record, index) => column.render!({ record, index }),
-      };
+      return { width: 160, ...column, key: String(column.key), dataIndex: column.dataIndex };
     });
   }, [columns]);
 
@@ -218,7 +214,7 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
     if (!isSelectMode) return undefined;
     return {
       selectedRowKeys,
-      columnWidth: 60,
+      columnWidth: 0,
       onChange: (newKeys: React.Key[], newItems: RecordType[]) => {
         setSelectedRowKeys(newKeys);
         setSelectedRowItems(newItems);
@@ -247,8 +243,8 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
 
   // 展开行配置
   const expandableConfig = useMemo(() => {
-    if (!expandable) return { columnWidth: 60 };
-    return { ...expandable, columnWidth: 60 };
+    if (expandable) return { ...expandable, columnWidth: 0 };
+    return { columnWidth: 0 };
   }, [expandable]);
 
   // 渲染 footer
@@ -260,7 +256,15 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
             isSelectMode ? (
               <>
                 <Space.Compact>
-                  <Button type="default" icon={<StopOutlined />} onClick={() => setIsSelectMode(false)}>
+                  <Button
+                    type="default"
+                    icon={<StopOutlined />}
+                    onClick={() => {
+                      setIsSelectMode(false);
+                      setSelectedRowKeys([]);
+                      setSelectedRowItems([]);
+                    }}
+                  >
                     关闭多选
                   </Button>
                   <SelectedPopover
@@ -293,7 +297,11 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
               pageSize={Number(paginationConfigRef.current.pageSize ?? 15)}
               total={paginationConfigRef.current.totalCount}
               showSizeChanger={true}
-              pageSizeOptions={[10, 15, 20, 30, 50, 100]}
+              pageSizeOptions={
+                paginationConfigRef.current.pageSizeOptions?.length
+                  ? paginationConfigRef.current.pageSizeOptions
+                  : [10, 15, 20, 30, 50, 100]
+              }
               onChange={paginationConfigRef.current.onChange}
             />
           )}
@@ -335,7 +343,7 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
   );
 
   return (
-    <div ref={tableContainerRef} style={{ width: "100%", height: "100%" }}>
+    <div ref={tableContainerRef} style={{ width: "100%", height: "100%", minHeight: 0 }}>
       <Table<RecordType>
         {...restProps}
         size={size}

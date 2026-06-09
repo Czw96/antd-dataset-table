@@ -38,10 +38,10 @@ const App: React.FC = () => {
   const [dataCount, setDataCount] = useState(25);
   // 功能开关
   const [showSelection, setShowSelection] = useState(true);
-  const [showExpandable, setShowExpandable] = useState(false);
+  const [showExpandable, setShowExpandable] = useState(true);
   const [showRowAction, setShowRowAction] = useState(true);
   const [showPagination, setShowPagination] = useState(true);
-  const [showExtraAction, setShowExtraAction] = useState(false);
+  const [showExtraAction, setShowExtraAction] = useState(true);
   // 表格属性
   const [tableSize, setTableSize] = useState<"small" | "middle" | "large">("small");
   const [bordered, setBordered] = useState(false);
@@ -134,11 +134,11 @@ const App: React.FC = () => {
           title={
             <Space>
               <span>预览</span>
-              <Tag color="blue">DemoItem</Tag>
+              <Tag color="blue">Demo</Tag>
             </Space>
           }
-          style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}
-          styles={{ body: { flex: 1, padding: 0, overflow: "clip", display: "flex", flexDirection: "column" } }}
+          style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}
+          styles={{ body: { flex: 1, padding: 0, overflow: "clip", display: "flex", flexDirection: "column", minHeight: 0 } }}
         >
           <DataTable<DemoItem>
             name="demo-table"
@@ -164,7 +164,7 @@ const App: React.FC = () => {
                 ? {
                     displayColumnKeys: ["name", "age", "status"],
                     batchActionRender: (records) => (
-                      <Button type="primary" size="small" onClick={() => message.info(`批量操作 ${records.length} 条`)}>
+                      <Button type="primary" onClick={() => message.info(`批量操作 ${records.length} 条`)}>
                         批量操作
                       </Button>
                     ),
@@ -195,13 +195,7 @@ const App: React.FC = () => {
                 : undefined
             }
             extraActionRender={
-              showExtraAction
-                ? () => (
-                    <Button size="small" onClick={() => message.info("自定义操作")}>
-                      自定义
-                    </Button>
-                  )
-                : undefined
+              showExtraAction ? () => <Button onClick={() => message.info("自定义操作")}>自定义</Button> : undefined
             }
             onSortChange={setSortKey}
           />
@@ -213,7 +207,7 @@ const App: React.FC = () => {
 
 // ─── 辅助组件 ───
 
-/** Left sidebar container */
+/** 左侧面板容器 */
 const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div
     style={{
@@ -229,7 +223,7 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </div>
 );
 
-/** Config section with divider title */
+/** 配置分区(带分隔线标题) */
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div style={{ marginBottom: 16 }}>
     <Divider
@@ -243,7 +237,7 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
   </div>
 );
 
-/** Switch with label and optional desc tag */
+/** 开关组件(含标签和可选描述) */
 const SwitchItem: React.FC<{
   label: string;
   desc?: string;
@@ -264,17 +258,17 @@ const SwitchItem: React.FC<{
   </Row>
 );
 
-/** Flex row with space-between alignment */
+/** Flex 行(space-between 对齐) */
 const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>{children}</div>
 );
 
-/** Monospace label */
+/** 等宽字体标签 */
 const Label: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => (
   <code style={{ fontSize: 13, ...style }}>{children}</code>
 );
 
-/** Read-only status display row */
+/** 只读状态展示行 */
 const StatusItem: React.FC<{ label: string; value: string; color?: string }> = ({ label, value, color }) => (
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
     <span style={{ fontSize: 13, color: "#666" }}>{label}</span>
