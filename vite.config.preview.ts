@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react()],
   root: "./preview",
-  base: "/antd-data-table/",
+  base: "/antd-dataset-table/",
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),

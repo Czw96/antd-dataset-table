@@ -1,28 +1,28 @@
 <p align="center">
-  <h1 align="center">antd-data-table</h1>
+  <h1 align="center">antd-dataset-table</h1>
   <p align="center">基于 Ant Design 的功能增强表格组件，内置批量选择、列配置、自适应高度等能力。</p>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/antd-data-table"><img src="https://img.shields.io/npm/v/antd-data-table" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/antd-data-table"><img src="https://img.shields.io/npm/dm/antd-data-table" alt="npm downloads" /></a>
-  <a href="https://github.com/Czw96/antd-data-table/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/antd-data-table" alt="license" /></a>
-  <a href="https://github.com/Czw96/antd-data-table"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" /></a>
+  <a href="https://www.npmjs.com/package/antd-dataset-table"><img src="https://img.shields.io/npm/v/antd-dataset-table" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/antd-dataset-table"><img src="https://img.shields.io/npm/dm/antd-dataset-table" alt="npm downloads" /></a>
+  <a href="https://github.com/Czw96/antd-dataset-table/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/antd-dataset-table" alt="license" /></a>
+  <a href="https://github.com/Czw96/antd-dataset-table"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" /></a>
 </p>
 
-中文 | [English](https://github.com/Czw96/antd-data-table/blob/master/README_EN.md)
+中文 | [English](https://github.com/Czw96/antd-dataset-table/blob/master/README_EN.md)
 
 ---
 
 ## 安装
 
 ```bash
-npm install antd-data-table
+npm install antd-dataset-table
 ```
 
 ## 在线演示
 
-[antd-data-table demo](https://czw96.github.io/antd-data-table/)
+[antd-dataset-table demo](https://czw96.github.io/antd-dataset-table/)
 
 本地启动预览：
 
@@ -42,8 +42,8 @@ npm run preview
 ## 使用示例
 
 ```tsx
-import { DataTable } from "antd-data-table";
-import type { ColumnItem } from "antd-data-table";
+import { DataTable } from "antd-dataset-table";
+import type { ColumnItem } from "antd-dataset-table";
 
 interface User {
   id: number;
@@ -183,8 +183,8 @@ function App() {
 ## 本地开发
 
 ```bash
-git clone https://github.com/Czw96/antd-data-table.git
-cd antd-data-table
+git clone https://github.com/Czw96/antd-dataset-table.git
+cd antd-dataset-table
 npm install
 
 npm run dev         # 监听构建

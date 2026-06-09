@@ -1,5 +1,5 @@
 {
-  "name": "antd-data-table",
+  "name": "antd-dataset-table",
   "type": "module",
   "version": "1.0.0",
   "description": "A feature-rich data table component for Ant Design, with batch selection, column configuration, and drag-to-sort support",
@@ -72,10 +72,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Czw96/antd-data-table.git"
+    "url": "git+https://github.com/Czw96/antd-dataset-table.git"
   },
   "bugs": {
-    "url": "https://github.com/Czw96/antd-data-table/issues"
+    "url": "https://github.com/Czw96/antd-dataset-table/issues"
   },
-  "homepage": "https://github.com/Czw96/antd-data-table#readme"
+  "homepage": "https://github.com/Czw96/antd-dataset-table#readme"
 }
