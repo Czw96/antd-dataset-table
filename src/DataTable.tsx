@@ -14,28 +14,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { ColumnConfig } from "./ColumnSetting";
 import ColumnSetting from "./ColumnSetting";
 import SelectedPopover from "./SelectedPopover";
+import type { ColumnItem, PaginationConfig, SelectionConfig } from "./types";
 import { useTableHeight } from "./useTableHeight";
-
-interface ColumnItem<RecordType> extends Omit<ColumnType<RecordType>, "key" | "title" | "dataIndex" | "render"> {
-  key: string;
-  title?: string;
-  dataIndex?: string | string[];
-  render?: ({ record, index }: { record: RecordType; index: number }) => React.ReactNode;
-}
-
-interface SelectionConfig<RecordType> {
-  displayColumnKeys: string[];
-  batchActionRender?: (records: RecordType[]) => React.ReactNode;
-  onChange?: (records: RecordType[]) => void;
-}
-
-interface PaginationConfig {
-  page?: number | string;
-  pageSize?: number | string;
-  totalCount: number;
-  onChange?: (page: number, pageSize: number) => void;
-  pageSizeOptions?: number[];
-}
 
 interface DataTableProps<RecordType> extends Omit<
   TableProps<RecordType>,

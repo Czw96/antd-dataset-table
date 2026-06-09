@@ -2,7 +2,7 @@ import { Button, Flex, Popover, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useCallback, useMemo, useRef } from "react";
 
-import type { ColumnItem } from "./DataTable";
+import type { ColumnItem } from "./types";
 
 interface SelectedPopoverProps<RecordType> {
   rowKey: string;
