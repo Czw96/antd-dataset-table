@@ -1,7 +1,7 @@
 {
   "name": "antd-dataset-table",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A feature-rich data table component for Ant Design, with batch selection, column configuration, and drag-to-sort support",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

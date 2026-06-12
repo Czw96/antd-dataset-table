@@ -22,7 +22,7 @@ npm install antd-dataset-table
 
 ## 在线演示
 
-[antd-dataset-table demo](https://czw96.github.io/antd-dataset-table/)
+[antd-dataset-table demo](https://demo.29dev.cn/antd-dataset-table/)
 
 本地启动预览：
 

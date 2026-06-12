@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../demo-dist",
+    outDir: "/var/www/demo.29dev.cn/antd-dataset-table",
   },
 });

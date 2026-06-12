@@ -22,7 +22,7 @@ npm install antd-dataset-table
 
 ## Demo
 
-[Online demo](https://czw96.github.io/antd-dataset-table/)
+[Online demo](https://demo.29dev.cn/antd-dataset-table/)
 
 Run locally:
 
