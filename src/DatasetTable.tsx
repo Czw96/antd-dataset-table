@@ -17,7 +17,7 @@ import SelectedPopover from "./SelectedPopover";
 import type { ColumnItem, PaginationConfig, SelectionConfig } from "./types";
 import { useTableHeight } from "./useTableHeight";
 
-interface DataTableProps<RecordType> extends Omit<
+interface DatasetTableProps<RecordType> extends Omit<
   TableProps<RecordType>,
   "rowKey" | "columns" | "rowSelection" | "pagination" | "sticky" | "showSorterTooltip" | "scroll"
 > {
@@ -32,7 +32,7 @@ interface DataTableProps<RecordType> extends Omit<
 }
 
 const TABLE_STYLES = { footer: { width: "100%", padding: 12, background: "#fff" } };
-const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: DataTableProps<RecordType>) => {
+const DatasetTable = <RecordType extends Record<keyof RecordType, unknown>>(props: DatasetTableProps<RecordType>) => {
   const {
     name,
     rowKey = "id",
@@ -343,5 +343,5 @@ const DataTable = <RecordType extends Record<keyof RecordType, unknown>>(props: 
   );
 };
 
-export type { ColumnItem, DataTableProps, PaginationConfig, SelectionConfig };
-export default DataTable;
+export type { ColumnItem, DatasetTableProps, PaginationConfig, SelectionConfig };
+export default DatasetTable;

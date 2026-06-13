@@ -42,7 +42,7 @@ npm run preview
 ## 使用示例
 
 ```tsx
-import { DataTable } from "antd-dataset-table";
+import { DatasetTable } from "antd-dataset-table";
 import type { ColumnItem } from "antd-dataset-table";
 
 interface User {
@@ -63,7 +63,7 @@ function App() {
   const [users, setUsers] = useState<User[]>([]);
 
   return (
-    <DataTable<User>
+    <DatasetTable<User>
       name="users-table"
       rowKey="id"
       columns={columns}
@@ -82,7 +82,7 @@ function App() {
 ### 完整功能示例
 
 ```tsx
-<DataTable<User>
+<DatasetTable<User>
   name="users-table"
   rowKey="id"
   columns={columns}
@@ -112,9 +112,9 @@ function App() {
 
 ## API
 
-`DataTableProps` 继承 `TableProps`（排除了 `rowKey`、`columns`、`rowSelection`、`pagination`、`sticky`、`showSorterTooltip`、`scroll`），因此 antd Table 的标准属性（`loading`、`size`、`bordered`、`expandable`、`locale` 等）可直接使用。`scroll` 由组件根据容器高度自动计算，`showSorterTooltip` 内部固定为 `false`。
+`DatasetTableProps` 继承 `TableProps`（排除了 `rowKey`、`columns`、`rowSelection`、`pagination`、`sticky`、`showSorterTooltip`、`scroll`），因此 antd Table 的标准属性（`loading`、`size`、`bordered`、`expandable`、`locale` 等）可直接使用。`scroll` 由组件根据容器高度自动计算，`showSorterTooltip` 内部固定为 `false`。
 
-### DataTableProps
+### DatasetTableProps
 
 | 属性 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -166,8 +166,8 @@ function App() {
 
 | 导出 | 说明 |
 |------|------|
-| `DataTable` | 表格组件 |
-| `DataTableProps` | 表格 Props 类型 |
+| `DatasetTable` | 表格组件 |
+| `DatasetTableProps` | 表格 Props 类型 |
 | `ColumnItem` | 列配置类型 |
 | `ColumnConfig` | 列配置状态类型（ColumnSetting 使用） |
 | `SelectionConfig` | 多选配置类型 |

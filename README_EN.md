@@ -42,7 +42,7 @@ npm run preview
 ## Usage
 
 ```tsx
-import { DataTable } from "antd-dataset-table";
+import { DatasetTable } from "antd-dataset-table";
 import type { ColumnItem } from "antd-dataset-table";
 
 interface User {
@@ -63,7 +63,7 @@ function App() {
   const [users, setUsers] = useState<User[]>([]);
 
   return (
-    <DataTable<User>
+    <DatasetTable<User>
       name="users-table"
       rowKey="id"
       columns={columns}
@@ -82,7 +82,7 @@ function App() {
 ### Full Example
 
 ```tsx
-<DataTable<User>
+<DatasetTable<User>
   name="users-table"
   rowKey="id"
   columns={columns}
@@ -112,9 +112,9 @@ function App() {
 
 ## API
 
-`DataTableProps` extends `TableProps` (with `rowKey`, `columns`, `rowSelection`, `pagination`, `sticky`, `showSorterTooltip`, and `scroll` omitted). All standard antd Table props (`loading`, `size`, `bordered`, `expandable`, `locale`, etc.) work as usual. `scroll` is auto-calculated from container height, and `showSorterTooltip` is forced to `false`.
+`DatasetTableProps` extends `TableProps` (with `rowKey`, `columns`, `rowSelection`, `pagination`, `sticky`, `showSorterTooltip`, and `scroll` omitted). All standard antd Table props (`loading`, `size`, `bordered`, `expandable`, `locale`, etc.) work as usual. `scroll` is auto-calculated from container height, and `showSorterTooltip` is forced to `false`.
 
-### DataTableProps
+### DatasetTableProps
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -166,8 +166,8 @@ function App() {
 
 | Export | Description |
 |--------|-------------|
-| `DataTable` | The table component |
-| `DataTableProps` | Table props type |
+| `DatasetTable` | The table component |
+| `DatasetTableProps` | Table props type |
 | `ColumnItem` | Column definition type |
 | `ColumnConfig` | Column config state type (used by ColumnSetting) |
 | `SelectionConfig` | Multi-select config type |

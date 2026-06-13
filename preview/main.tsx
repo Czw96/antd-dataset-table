@@ -3,8 +3,8 @@ import "antd/dist/reset.css";
 import zhCN from "antd/locale/zh_CN";
 import React, { useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { DataTable } from "../src";
-import type { ColumnItem } from "../src/DataTable";
+import { DatasetTable } from "../src";
+import type { ColumnItem } from "../src/DatasetTable";
 
 interface DemoItem {
   id: number;
@@ -70,7 +70,7 @@ const App: React.FC = () => {
       {/* ─── 左侧配置面板 ─── */}
       <Sidebar>
         <Typography.Title level={5} style={{ margin: "0 0 16px" }}>
-          DataTable Props
+          DatasetTable Props
         </Typography.Title>
 
         {/* 数据源 */}
@@ -140,7 +140,7 @@ const App: React.FC = () => {
           style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}
           styles={{ body: { flex: 1, padding: 0, overflow: "clip", display: "flex", flexDirection: "column", minHeight: 0 } }}
         >
-          <DataTable<DemoItem>
+          <DatasetTable<DemoItem>
             name="demo-table"
             rowKey="id"
             size={tableSize}
